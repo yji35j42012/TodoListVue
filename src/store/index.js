@@ -7,9 +7,62 @@ Vue.use(Vuex)
 const STORE = new LocalStorage('todo-vue')
 export default new Vuex.Store({
 	state: {
-		todos: []
+		todos: [
+			{
+				content: '123',
+				done: false,
+			},
+			{
+				content: '456',
+				done: false,
+			},
+			{
+				content: '789',
+				done: false,
+			},
+		]
 	},
 	getters: {
+		// 如果是db有直接配發給資料ID 不用做這個
+		// 把原始資料轉回有ID的
+		list(state) {
+			return state.todos.map((todo, tId) => {
+				return {
+					tId,
+					todo
+				}
+			})
+		},
+		// 把有ID的資料作過濾
+		filterList(state , getters){
+			return function (filter){
+				let status = null
+				switch(filter){
+					case 'all':
+						return getters.list
+					case 'active':
+						status = false
+						break
+						// return getters.list.filter((todo) => {
+						// 	return !todo.todo.done
+						// })
+					case 'done':
+						status = true
+						break
+						// return getters.list.filter((todo) => {
+						// 	return todo.todo.done
+						// })
+					// default:
+					// 	return []
+				}
+				return getters.list.filter((todo) =>{
+					return todo.todo.done === status
+				})
+			}
+		},
+		// filterList2 : (state) => (filter) =>{
+
+		// }
 
 	},
 	mutations: {
@@ -40,6 +93,12 @@ export default new Vuex.Store({
 			return {
 				todos
 			}
+
+			// return axios.post().then((res) =>{
+
+			// }).catch(() =>{
+
+			// })
 		},
 		UPDATE_TODO({ commit }, { tId, todo }) {
 			// UPDATE_TODO 整個更新
@@ -82,11 +141,11 @@ export default new Vuex.Store({
 				todo
 			}
 		},
-		CLEAR_TODOS({commit}){
+		CLEAR_TODOS({ commit }) {
 			const todos = []
 			STORE.save(todos)
-			commit('SET_TODOS' , todos)
-			return{
+			commit('SET_TODOS', todos)
+			return {
 				todos
 			}
 		}
