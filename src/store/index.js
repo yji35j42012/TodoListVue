@@ -18,7 +18,7 @@ export default new Vuex.Store({
 			},
 			{
 				content: '789',
-				done: false,
+				done: true,
 			},
 		]
 	},
