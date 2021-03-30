@@ -3,11 +3,13 @@
         <template v-if="!edit">
             <!-- <input type="checkbox" v-model="editingTodo.done"> -->
             <input type="checkbox" v-model="done">
-            {{content}}
+            {{todo.content}}
+            <button @click="$emit('editThis')">編輯</button>
         </template>
         <template v-else>
             <!-- <input type="text"  v-model="editingTodo.content"> -->
-            <input type="text"  v-model="content">
+            <input type="text"  v-model="editContent">
+            <button @click="$emit('editComplete' , editContent)">完成</button>
         </template>				
     </li>
 </template>
@@ -23,15 +25,24 @@ export default {
             default:false,
         }
     },
+    data(){
+        return{
+            editContent:'',
+        }
+    },
+    mounted(){
+        this.editContent = this.todo.content
+    },
     computed:{
-        content:{
-            get(){
-                return this.todo.content
-            },
-            set(value){
-
-            }
-        },
+        // content:{
+        //     get(){
+        //         return this.todo.content
+        //     },
+        //     set(value){
+        //         this.editContent = value;
+        //         console.log(value);
+        //     }
+        // },
         done:{
             get(){
                 return this.todo.done

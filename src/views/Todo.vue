@@ -26,6 +26,8 @@
 				:key="item.tId" 
 				:todo="item.todo" 
 				:edit="item.tId === edit "
+				@editThis="edit = item.tId"
+				@editComplete=" value => editCompleteHandler(item.tId , value)"
 				@check=" value => checkHandler(item.tId , value)"
 			/>
 		</ul>
@@ -59,16 +61,27 @@ export default {
 			immediate:true,
 			handler:function(route){
 				this.filter = route.query.filter || 'all'
+				this.edit = null
 			}
 		}
 	},
 	components:{
 		TodoItem
 	},
+	mounted(){
+		this.$store.dispatch("READ_TODOS")
+	},
 	methods:{
-		checkHandler(tId ,value){
-			console.log(tId , value);
-		}
+		checkHandler(tId ,done){
+			console.log(tId , done);
+			this.$store.dispatch('CHECK_TODO' , {tId , done})
+		},
+		editCompleteHandler(tId ,content){
+			console.log(tId , content);
+			this.$store.dispatch('UPDATE_TODO' , {tId , content})
+			this.edit = null;
+			// this.$store.dispatch('CHECK_TODO' , {tId , done})
+		},
 	}
 };
 </script>

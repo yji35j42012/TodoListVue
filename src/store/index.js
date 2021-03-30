@@ -8,18 +8,18 @@ const STORE = new LocalStorage('todo-vue')
 export default new Vuex.Store({
 	state: {
 		todos: [
-			{
-				content: '123',
-				done: false,
-			},
-			{
-				content: '456',
-				done: false,
-			},
-			{
-				content: '789',
-				done: true,
-			},
+			// {
+			// 	content: '123',
+			// 	done: false,
+			// },
+			// {
+			// 	content: '456',
+			// 	done: false,
+			// },
+			// {
+			// 	content: '789',
+			// 	done: true,
+			// },
 		]
 	},
 	getters: {
@@ -100,34 +100,52 @@ export default new Vuex.Store({
 
 			// })
 		},
-		UPDATE_TODO({ commit }, { tId, todo }) {
-			// UPDATE_TODO 整個更新
-			// 1.PATCH //axios.patch() 
-			const todos = STORE.load()
-			todos.splice(tId, 1, todo)
-			STORE.save(todos)
-			// 2.commit mutation  寫入 state
-			commit('SET_TODOS', todos)
-			// 3. return
-			return {
-				tId,
-				todo
-			}
-		},
-		// UPDATE_TODO1({ commit }, { tId, content }) {
-		// 只更新內容
+		// UPDATE_TODO1({ commit }, { tId, todo }) {
+		// 	// UPDATE_TODO 整個更新
 		// 	// 1.PATCH //axios.patch() 
 		// 	const todos = STORE.load()
-		// 	todos[tId].content = content
+		// 	todos.splice(tId, 1, todo)
 		// 	STORE.save(todos)
 		// 	// 2.commit mutation  寫入 state
 		// 	commit('SET_TODOS', todos)
 		// 	// 3. return
 		// 	return {
 		// 		tId,
-		// 		todo: todos[tId]
+		// 		todo
 		// 	}
 		// },
+		CHECK_TODO({ commit }, { tId, done }) {
+			// UPDATE_TODO 整個更新
+			// 1.PATCH //axios.patch() 
+			const todos = STORE.load()
+			console.log(todos[tId] ,done);
+			
+			todos[tId].done = done
+			STORE.save(todos)
+			// 2.commit mutation  寫入 state
+			commit('SET_TODOS', todos)
+			// 3. return
+			return {
+				tId,
+				todo: todos[tId],
+			}
+		},
+		UPDATE_TODO({ commit }, { tId, content }) {
+			// 只更新內容
+			// 1.PATCH //axios.patch() 
+			if(this.state.todos[tId].content === content) return
+			console.log("API");
+			const todos = STORE.load()
+			todos[tId].content = content
+			STORE.save(todos)
+			// 2.commit mutation  寫入 state
+			commit('SET_TODOS', todos)
+			// 3. return
+			return {
+				tId,
+				todo: todos[tId]
+			}
+		},
 		DELETE_TODO({ commit }, { tId }) {
 			// 1.DELETE //axios.delete() 
 			const todos = STORE.load()
